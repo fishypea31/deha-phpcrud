@@ -1,5 +1,53 @@
 <?php
 session_start();
+$conn = new mysqli('localhost', 'root', '', null);
+
+if($conn->connect_error){
+    die('Connect error: ' . $conn->connect_error);
+}
+
+$sql = "CREATE database if not exists crud";
+$result = $conn->query($sql);
+if($result){
+    $_SESSION["message"]= "Database created successfully";
+} else {
+    $_SESSION["message"]= "Error creating database: " . $conn->error;
+}
+
+$conn->select_db('crud');
+
+$sql = "CREATE table if not exists admins(
+    id int primary key not null auto_increment,
+    fullname varchar(100),
+    username varchar(50) not null unique,
+    email varchar(50) not null unique,
+    phone varchar(11),    
+    password varchar(40) not null
+)";
+
+$result = $conn->query($sql);
+if($result){
+    $_SESSION["message"]= "Table admins created successfully";
+} else {
+    $_SESSION["message"]= "Error creating table: " . $conn->error;
+}
+
+$sql = "CREATE table if not exists users (
+    id int primary key not null auto_increment,
+    name varchar(100) not null,
+    email varchar(50) not null unique,
+    passwords varchar(20)
+)";
+
+$result = $conn->query($sql);
+
+if($result){
+    $_SESSION["message"]= "Table users created successfully";
+}else{
+    $_SESSION["message"]= "Error creating table: " . $conn->error;
+}
+
+
 class DB{
     static private $connection;
     const DB_TYPE = "mysql";
